@@ -1,13 +1,14 @@
-def cache_read():
-    print("1")
+def cache_read(address):
+    print("ADDRESS:", address)
 
 
-def cache_write():
-    print("2")
+def cache_write(address, data):
+    print("ADDRESS:", address)
+    print("DATA", data)
 
 
 def cache_flush():
-    print("3")
+    print("cache_cleared")
 
 
 def cache_view():

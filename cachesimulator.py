@@ -7,8 +7,10 @@
 # e.g. The content of this file implements ...
 
 import argparse
+import math
 import menu
 RAM = {}
+m = 8
 
 
 def init_ram(input):
@@ -20,19 +22,29 @@ def init_ram(input):
         RAM[str(hex(count))] = l
         count += 1
     i.close()
+    # print(RAM)
+    # for r in RAM:
+    #     print(r, RAM[r])
     print("ram successfully initialized!")
 
 
 def config_cache():
-    global c_size, block_size, associativity, replace, write_hit, write_miss
+    global C, B, E, replace, write_hit, write_miss
     print("\nconfigure the cache:")
-    c_size = int(input("cache size: "))
-    block_size = int(input("data block size: "))
-    associativity = int(input("associativity: "))
+    C = int(input("cache size: "))
+    B = int(input("data block size: "))
+    E = int(input("associativity: "))
     replace = int(input("replacement policy: "))
     write_hit = int(input("write hit policy: "))
     write_miss = int(input("write miss policy: "))
     print("cache successfully configured!")
+    S = C/(B*E)
+    s = math.log2(S)
+    b = math.log2(B)
+    t = m-(s+b)
+    # print(s)
+    # print(b)
+    # print(t)
 
 
 def simulate_cache():
@@ -50,20 +62,25 @@ def simulate_cache():
     command = ""
     while(command != "quit"):
         command = input("")
-        if command == "cache-read":
-            menu.cache_read()
-        if command == "cache-write":
-            menu.cache_write()
-        if command == "cache-flush":
+        if "cache-read" in command:
+            menu.cache_read(command[command.find(" ")+1:].strip())
+        elif "cache-write" in command:
+            temp = command[command.find(" ")+1:]
+            menu.cache_write(temp[: temp.find(" ")].strip(),
+                             temp[temp.find(" ")+1:].strip())
+        elif "cache-flush" in command:
             menu.cache_flush()
-        if command == "cache-view":
+        elif "cache-view" in command:
             menu.cache_view()
-        if command == "memory-view":
+        elif "memory-view" in command:
             menu.memory_view()
-        if command == "cache-dump":
+        elif "cache-dump" in command:
             menu.cache_dump()
-        if command == "memory-dump":
+        elif "memory-dump" in command:
             menu.memory_dump()
+        else:
+            if command != "quit":
+                print("Not a command. Please type one command from the menu above.")
 
 
 def main():
@@ -76,8 +93,8 @@ def main():
     args = parser.parse_args()
 
     print("*** Welcome to the cache simulator ***")
-    # init_ram(args.input)
-    # config_cache()
+    init_ram(args.input)
+    config_cache()
     simulate_cache()
 
 
