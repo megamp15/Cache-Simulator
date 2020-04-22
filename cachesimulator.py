@@ -21,8 +21,10 @@ def init_ram(input):
     print("init-ram 0x00 0xFF")
     i = open(input, "r")
     for l in i.read().splitlines():
-        RAM[str(hex(count))] = l
+        RAM["0x"+str(hex(count))[2:].zfill(2)] = l
         count += 1
+    for r in RAM:
+        print(r)
     i.close()
     print("ram successfully initialized!")
 

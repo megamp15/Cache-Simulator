@@ -22,47 +22,54 @@ def cache(B, E, S):
 
 def cache_read(address, s, t, b, S, E, B, replace, RAM):
     global cache_hits, cache_miss, c
+    hit = False
     b_address = (bin(int(address[2:], 16))[2:].zfill(8))
     tag = b_address[:int(t)]
     set_index = b_address[int(t):int(t)+int(s)]
     b_offset = b_address[int(t)+int(s):]
     print("set:", int(set_index, 2))
     print("tag:", int(tag, 2))
-    for i in range(S):
-        for e in range(E):
-            print(str(c[i][e][0]) == "1")
-            print((str(c[i][e][2]) == str(hex(int(tag)))))
-            if (str(c[i][e][0]) == "1") and (str(c[i][e][2]) == str(hex(int(tag)))):
-                hit = True
-            else:
-                hit = False
-    if(hit):
-        cache_hits += 1
-        print("hit:yes")
-        print("eviction_line:-1")
-        print("ram_address:-1")
-        print("data:"+c[i][e][int(b_offset, 2)+3])
-    else:
-        cache_miss += 1
-        print("hit:no")
-        if replace == 1:
-            l = random.randint(1, S*E)
-            r = bin(l-1)[2:].zfill(2)
-        print("eviction_line:", l)
-        print("ram_address:", address)
-        print("data:0x"+RAM[address])
-        for i in range(S):
-            for e in range(E):
-                for b in range(B+3):
-                    if b == 0:
-                        c[int(r[0])][int(r[1])][b] = "1"
-                    elif b == 1:
-                        pass
-                    elif b == 2:
-                        c[int(r[0])][int(r[1])][b] = str(hex(int(tag)))
-                    else:
-                        c[int(r[0])][int(r[1])][b] = RAM[hex(
-                            (int(address[2:], 16)-int(b_offset))+(b-3))]
+    # for i in range(S):
+    #     for e in range(E):
+    #         if ((str(c[i][e][0]) == "1") and (str(c[i][e][2]) == str(hex(int(tag)))[2:].zfill(2))):
+    #             d_i = i
+    #             d_e = e
+    #             hit = True
+    #             break
+    # if(hit):
+    #     cache_hits += 1
+    #     print("hit:yes")
+    #     print("eviction_line:-1")
+    #     print("ram_address:-1")
+    #     print("data:0x"+c[d_i][d_e][int(b_offset, 2)+3])
+    # else:
+    #     cache_miss += 1
+    #     print("hit:no")
+    #     if replace == 1:
+    #         l = random.randint(1, S*E)
+    #         if E == 1:
+    #             r = str(l-1)+"0"
+    #             print(r)
+    #         elif E == 2:
+    #             r = bin(l-1)[2:].zfill(2)
+    #         else:
+    #             r = "0"+str(l-1)
+    #     print("eviction_line:", l)
+    #     print("ram_address:", address)
+    #     print("data:0x"+RAM[address])
+    #     for i in range(S):
+    #         for e in range(E):
+    #             for b in range(B+3):
+    #                 if b == 0:
+    #                     c[int(r[0])][int(r[1])][b] = "1"
+    #                 elif b == 1:
+    #                     pass
+    #                 elif b == 2:
+    #                     c[int(r[0])][int(r[1])][b] = str(
+    #                         hex(int(tag)))[2:].zfill(2)
+    #                 else:
+    #                     c[int(r[0])][int(r[1])][b] = RAM["0x"+hex(
+    #                         (int(address[2:], 16)-int(b_offset))+(b-3))[2:].zfill(2)]
 
 
 def cache_write(address, data):
@@ -106,10 +113,6 @@ def cache_view(B, E, S, C, replace, write_hit, write_miss):
     print("number_of_cache_hits:", cache_hits)
     print("number_of_cache_misses:", cache_miss)
     print("cache_content:")
-    # c[0][0][0] = "1"  # First line in set 1 valid bit - first line output
-    # c[1][0][0] = "1"  # First line in set 2 valid bit - third line output
-    # c[0][1][0] = "2"  # Second line in set 1 valid bit - second line output
-    # c[1][1][0] = "2"  # Second line in set 2 valid bit - fourth line output
     for i in range(S):
         for e in range(E):
             for b in range(B+3):
@@ -123,12 +126,8 @@ def memory_view(RAM, count):
     print("Address:Data")
     count = 0
     for r in RAM:
-        if len(r[2:]) == 1:
-            r_temp = r[:2] + "0"+r[2:]
-        else:
-            r_temp = r
         if count % 8 == 0:
-            print("\n", r_temp, ":", end="")
+            print("\n", r, ":", end="")
         print(RAM[r], end=" ")
         count += 1
 
