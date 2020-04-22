@@ -60,7 +60,8 @@ def simulate_cache():
         print("****************************")
         command = input("")
         if "cache-read" in command:
-            menu.cache_read(command[command.find(" ")+1:].strip(), s, t, b)
+            menu.cache_read(command[command.find(
+                " ")+1:].strip(), s, t, b, S, E, B, replace, RAM)
         elif "cache-write" in command:
             temp = command[command.find(" ")+1:]
             menu.cache_write(temp[: temp.find(" ")].strip(),
