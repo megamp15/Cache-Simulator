@@ -29,7 +29,7 @@ def init_ram(input):
 
 
 def config_cache():
-    global C, B, E, replace, write_hit, write_miss
+    global C, B, E, replace, write_hit, write_miss, S
     print("\nconfigure the cache:")
     C = int(input("cache size: "))
     B = int(input("data block size: "))
@@ -38,29 +38,30 @@ def config_cache():
     write_hit = int(input("write hit policy: "))
     write_miss = int(input("write miss policy: "))
     print("cache successfully configured!")
-    S = C/(B*E)
+    S = int(C/(B*E))
     s = math.log2(S)
     b = math.log2(B)
     t = m-(s+b)
     # print(s)
     # print(b)
     # print(t)
+    menu.cache(B, E, S)
 
 
 def simulate_cache():
-    print("\n*** Cache simulator menu ***")
-    print("type one command: ")
-    print("1. cache-read")
-    print("2. cache-write")
-    print("3. cache-flush")
-    print("4. cache-view")
-    print("5. memory-view")
-    print("6. cache-dump")
-    print("7. memory-dump")
-    print("8. quit")
-    print("****************************")
     command = ""
     while(command != "quit"):
+        print("\n*** Cache simulator menu ***")
+        print("type one command: ")
+        print("1. cache-read")
+        print("2. cache-write")
+        print("3. cache-flush")
+        print("4. cache-view")
+        print("5. memory-view")
+        print("6. cache-dump")
+        print("7. memory-dump")
+        print("8. quit")
+        print("****************************")
         command = input("")
         if "cache-read" in command:
             menu.cache_read(command[command.find(" ")+1:].strip())
@@ -69,9 +70,9 @@ def simulate_cache():
             menu.cache_write(temp[: temp.find(" ")].strip(),
                              temp[temp.find(" ")+1:].strip())
         elif "cache-flush" in command:
-            menu.cache_flush()
+            menu.cache_flush(B, E, S)
         elif "cache-view" in command:
-            menu.cache_view()
+            menu.cache_view(B, E, S)
         elif "memory-view" in command:
             menu.memory_view()
         elif "cache-dump" in command:
