@@ -9,22 +9,21 @@
 import argparse
 import math
 import menu
+
 RAM = {}
 m = 8
+count = 0
 
 
 def init_ram(input):
+    global count
     print("initialize the RAM:")
     print("init-ram 0x00 0xFF")
     i = open(input, "r")
-    count = 0
     for l in i.read().splitlines():
         RAM[str(hex(count))] = l
         count += 1
     i.close()
-    # print(RAM)
-    # for r in RAM:
-    #     print(r, RAM[r])
     print("ram successfully initialized!")
 
 
@@ -39,12 +38,9 @@ def config_cache():
     write_miss = int(input("write miss policy: "))
     print("cache successfully configured!")
     S = int(C/(B*E))
-    s = math.log2(S)
-    b = math.log2(B)
-    t = m-(s+b)
-    # print(s)
-    # print(b)
-    # print(t)
+    # s = math.log2(S)
+    # b = math.log2(B)
+    # t = m-(s+b)
     menu.cache(B, E, S)
 
 
@@ -72,16 +68,16 @@ def simulate_cache():
         elif "cache-flush" in command:
             menu.cache_flush(B, E, S)
         elif "cache-view" in command:
-            menu.cache_view(B, E, S)
+            menu.cache_view(B, E, S, C, replace, write_hit, write_miss)
         elif "memory-view" in command:
-            menu.memory_view()
+            menu.memory_view(RAM, count)
         elif "cache-dump" in command:
-            menu.cache_dump()
+            menu.cache_dump(B, E, S)
         elif "memory-dump" in command:
-            menu.memory_dump()
+            menu.memory_dump(RAM)
         else:
             if command != "quit":
-                print("Not a command. Please type one command from the menu above.")
+                print("Not a command. Please type one command from the menu.")
 
 
 def main():
