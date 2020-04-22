@@ -28,7 +28,7 @@ def init_ram(input):
 
 
 def config_cache():
-    global C, B, E, replace, write_hit, write_miss, S
+    global C, B, E, replace, write_hit, write_miss, S, s, b, t
     print("\nconfigure the cache:")
     C = int(input("cache size: "))
     B = int(input("data block size: "))
@@ -38,9 +38,9 @@ def config_cache():
     write_miss = int(input("write miss policy: "))
     print("cache successfully configured!")
     S = int(C/(B*E))
-    # s = math.log2(S)
-    # b = math.log2(B)
-    # t = m-(s+b)
+    s = math.log2(S)
+    b = math.log2(B)
+    t = m-(s+b)
     menu.cache(B, E, S)
 
 
@@ -60,7 +60,7 @@ def simulate_cache():
         print("****************************")
         command = input("")
         if "cache-read" in command:
-            menu.cache_read(command[command.find(" ")+1:].strip())
+            menu.cache_read(command[command.find(" ")+1:].strip(), s, t, b)
         elif "cache-write" in command:
             temp = command[command.find(" ")+1:]
             menu.cache_write(temp[: temp.find(" ")].strip(),

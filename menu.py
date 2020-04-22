@@ -18,8 +18,20 @@ def cache(B, E, S):
                     c[i][e].append("00")
 
 
-def cache_read(address):
-    print("ADDRESS:", address)
+def cache_read(address, s, t, b):
+    b_address = str(bin(int(address[2:], 16))[2:].zfill(8))
+    tag = b_address[:int(t)]
+    set_index = b_address[int(t):int(t)+int(s)]
+    b_offset = b_address[int(t)+int(s):]
+    # print(b_address)
+    # print(b_address[:int(t)])
+    # print(b_address[int(t):int(t)+int(s)])
+    # print(b_address[int(t)+int(s):])
+    # print("ADDRESS:", address)
+    # print("Address in binary:", b_address)
+    # print("s:", int(s), ": ")
+    # print("t:", int(t))
+    # print(f"b:{int(b)}")
 
 
 def cache_write(address, data):
