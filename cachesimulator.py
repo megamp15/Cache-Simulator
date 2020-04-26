@@ -1,10 +1,10 @@
-# File: project.py
+# File: cachesimulator.py
 # Author(s): Mahir Pirmohammed, Ashok Meyyappan
 # Date: 04/19/2020
 # Section: 510
 # E-mail: megamp15@tamu.edu
 # Description:
-# e.g. The content of this file implements ...
+# e.g. The content of this file implements...
 
 import argparse
 import math
@@ -31,7 +31,7 @@ def init_ram(input):
 
 def config_cache():
     global C, B, E, replace, write_hit, write_miss, S, s, b, t
-    print("\nconfigure the cache:")
+    print("configure the cache:")
     C = int(input("cache size: "))
     B = int(input("data block size: "))
     E = int(input("associativity: "))
@@ -49,7 +49,7 @@ def config_cache():
 def simulate_cache():
     command = ""
     while(command != "quit"):
-        print("\n*** Cache simulator menu ***")
+        print("*** Cache simulator menu ***")
         print("type one command: ")
         print("1. cache-read")
         print("2. cache-write")
@@ -88,7 +88,7 @@ def main():
     parser.add_argument(
         "input",
         help="The input file for initializing the physical memory.",
-        type=str,
+        type=str
     )
     args = parser.parse_args()
 

@@ -1,3 +1,11 @@
+# File: cachesimulator.py
+# Author(s): Mahir Pirmohammed, Ashok Meyyappan
+# Date: 04/19/2020
+# Section: 510
+# E-mail: megamp15@tamu.edu
+# Description:
+# e.g. The content of this file implements...
+
 import random
 
 c = []
@@ -93,8 +101,10 @@ def cache_flush(B, E, S):
 def cache_view(B, E, S, C, replace, write_hit, write_miss):
     if replace == 1:
         R = "random replacement"
-    else:
+    elif replace == 2:
         R = "least Recently Used"
+    else:
+        R = "least Frequently Used"
     if write_hit == 1:
         WH = "write-through"
     else:
@@ -104,14 +114,14 @@ def cache_view(B, E, S, C, replace, write_hit, write_miss):
     else:
         WM = "no write-allocate"
 
-    print("cache_size:", C)
-    print("data_block_size:", B)
-    print("associativity:", E)
-    print("replacement_policy:", R)
-    print("write_hit_policy:", WH)
-    print("write_miss_policy:", WM)
-    print("number_of_cache_hits:", cache_hits)
-    print("number_of_cache_misses:", cache_miss)
+    print(f"cache_size:{C}")
+    print(f"data_block_size:{B}")
+    print(f"associativity:{E}")
+    print(f"replacement_policy:{R}")
+    print(f"write_hit_policy:{WH}")
+    print(f"write_miss_policy:{WM}")
+    print(f"number_of_cache_hits:{cache_hits}")
+    print(f"number_of_cache_misses:{cache_miss}")
     print("cache_content:")
     for i in range(S):
         for e in range(E):
@@ -121,15 +131,16 @@ def cache_view(B, E, S, C, replace, write_hit, write_miss):
 
 
 def memory_view(RAM, count):
-    print("memory_size:", count)
+    print(f"memory_size:{count}")
     print("memory_content:")
-    print("Address:Data")
+    print("Address:Data", end="")
     count = 0
     for r in RAM:
         if count % 8 == 0:
-            print("\n", r, ":", end="")
+            print(f"\n{r}:", end="")
         print(RAM[r], end=" ")
         count += 1
+    print("")
 
 
 def cache_dump(B, E, S):
