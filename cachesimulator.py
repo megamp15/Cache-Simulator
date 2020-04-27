@@ -23,8 +23,8 @@ def init_ram(input):
     for l in i.read().splitlines():
         RAM["0x"+str(hex(count))[2:].zfill(2)] = l
         count += 1
-    for r in RAM:
-        print(r)
+    # for r in RAM:
+    #     print(r)
     i.close()
     print("ram successfully initialized!")
 
