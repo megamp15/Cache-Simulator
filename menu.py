@@ -147,8 +147,6 @@ def cache_flush(B, E, S):
                     c[i][e][b] = "0"
                 else:
                     c[i][e][b] = "00"
-    c[0][0][0] = "h"
-    c[0][1][0] = "h"
     print("cache_cleared")
 
 
