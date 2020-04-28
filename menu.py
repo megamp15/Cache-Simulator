@@ -11,6 +11,10 @@ import random
 c = []
 cache_hits = 0
 cache_miss = 0
+LFU_count_line0 = 0
+LFU_count_line1 = 0
+LFU_count_line2 = 0
+LFU_count_line3 = 0
 
 
 def cache(B, E, S):
@@ -25,22 +29,26 @@ def cache(B, E, S):
                 elif b == 1:
                     c[i][e].append("0")
                 elif b == 2:
-                    c[i][e].append("0")
+                    c[i][e].append(0)
                 else:
                     c[i][e].append("00")
 
 
 def cache_read(address, s, t, b, S, E, B, replace, RAM):
-    global cache_hits, cache_miss, c
+    global cache_hits, cache_miss, c, LFU_count_line0, LFU_count_line1, LFU_count_line2, LFU_count_line3
     hit = False
     b_address = (bin(int(address[2:], 16))[2:].zfill(8))
     tag = b_address[:int(t)]
     set_index = b_address[int(t):int(t)+int(s)]
     b_offset = b_address[int(t)+int(s):]
-    print(b_address)
-    print(tag)
-    print(set_index)
-    print(b_offset)
+    # print(b_address)
+    # print(tag)
+    # print(set_index)
+    # print(b_offset)
+    # print(LFU_count_line0)
+    # print(LFU_count_line1)
+    # print(LFU_count_line2)
+    # print(LFU_count_line3)
     if set_index != "":
         print(f"set:{int(set_index, 2)}")
         si = int(set_index, 2)
@@ -71,6 +79,20 @@ def cache_read(address, s, t, b, S, E, B, replace, RAM):
         print("eviction_line:-1")
         print("ram_address:-1")
         print("data:0x"+c[d_i][d_e][int(b_offset, 2)+4])
+        if replace == 3:
+            if d_e == 0:
+                LFU_count_line0 += 1
+                c[d_i][0][2] = LFU_count_line0
+            elif d_e == 1:
+                LFU_count_line1 += 1
+                c[d_i][1][2] = LFU_count_line1
+            elif d_e == 2:
+                LFU_count_line2 += 1
+                c[d_i][2][2] = LFU_count_line2
+            else:
+                LFU_count_line3 += 1
+                c[d_i][3][2] = LFU_count_line3
+
     else:
         cache_miss += 1
         print("write_hit:no")
@@ -90,34 +112,61 @@ def cache_read(address, s, t, b, S, E, B, replace, RAM):
             if E == 1:
                 l = 1
             elif E == 2:
-                if c[si][0][2] == "0":
+                if c[si][0][2] == 0:
                     l = 1
-                    c[si][0][2] = "1"
+                    c[si][0][2] = 1
                 else:
                     l = 2
-                    c[si][0][2] = "0"
+                    c[si][0][2] = 0
             else:
-                if c[si][0][2] == "0":
-                    if c[si][1][2] == "0":
+                if c[si][0][2] == 0:
+                    if c[si][1][2] == 0:
                         l = 1
-                        c[si][0][2] = "1"
-                        c[si][1][2] = "0"
+                        c[si][0][2] = 1
+                        c[si][1][2] = 0
                     else:
                         l = 2
-                        c[si][0][2] = "1"
-                        c[si][1][2] = "1"
+                        c[si][0][2] = 1
+                        c[si][1][2] = 1
                 else:
-                    if c[si][1][2] == "0":
+                    if c[si][1][2] == 0:
                         l = 3
-                        c[si][0][2] = "0"
-                        c[si][1][2] = "1"
+                        c[si][0][2] = 0
+                        c[si][1][2] = 1
                     else:
                         l = 4
-                        c[si][0][2] = "0"
-                        c[si][1][2] = "0"
+                        c[si][0][2] = 0
+                        c[si][1][2] = 0
         else:
             # Extra Credit
-            pass
+            if E == 1:
+                l = 1
+            elif E == 2:
+                if c[si][0][2] == min(c[si][0][2], c[si][1][2]):
+                    l = 1
+                    LFU_count_line0 = 1
+                    c[si][0][2] = LFU_count_line0
+                else:
+                    l = 2
+                    LFU_count_line1 = 1
+                    c[si][1][2] = LFU_count_line1
+            else:
+                if c[si][0][2] == min(c[si][0][2], c[si][1][2], c[si][2][2], c[si][3][2]):
+                    l = 1
+                    LFU_count_line0 = 1
+                    c[si][0][2] = LFU_count_line0
+                elif c[si][1][2] == min(c[si][0][2], c[si][1][2], c[si][2][2], c[si][3][2]):
+                    l = 2
+                    LFU_count_line1 = 1
+                    c[si][1][2] = LFU_count_line1
+                elif c[si][2][2] == min(c[si][0][2], c[si][1][2], c[si][2][2], c[si][3][2]):
+                    l = 3
+                    LFU_count_line2 = 1
+                    c[si][2][2] = LFU_count_line2
+                else:
+                    l = 4
+                    LFU_count_line3 = 1
+                    c[si][3][2] = LFU_count_line3
 
         print(f"eviction_line:{l}")
         c[si][l-1][0] = "1"
