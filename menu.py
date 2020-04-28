@@ -120,23 +120,41 @@ def cache_read(address, s, t, b, S, E, B, replace, RAM):
                     c[si][0][2] = 0
             else:
                 if c[si][0][2] == 0:
-                    if c[si][1][2] == 0:
-                        l = 1
-                        c[si][0][2] = 1
-                        c[si][1][2] = 0
-                    else:
-                        l = 2
-                        c[si][0][2] = 1
-                        c[si][1][2] = 1
+                    l = 1
+                    c[si][0][2] = 1
+                    c[si][1][2] = 0
+                elif c[si][1][2] == 0:
+                    l = 2
+                    c[si][1][2] = 1
+                    c[si][2][2] = 0
+                elif c[si][2][2] == 0:
+                    l = 3
+                    c[si][2][2] = 1
+                    c[si][3][2] = 0
                 else:
-                    if c[si][1][2] == 0:
-                        l = 3
-                        c[si][0][2] = 0
-                        c[si][1][2] = 1
-                    else:
-                        l = 4
-                        c[si][0][2] = 0
-                        c[si][1][2] = 0
+                    l = 4
+                    c[si][3][2] = 1
+                    c[si][0][2] = 0
+
+                # Before
+                # if c[si][0][2] == 0:
+                #     if c[si][1][2] == 0:
+                #         l = 1
+                #         c[si][0][2] = 1
+                #         c[si][1][2] = 0
+                #     else:
+                #         l = 2
+                #         c[si][0][2] = 1
+                #         c[si][1][2] = 1
+                # else:
+                #     if c[si][1][2] == 0:
+                #         l = 3
+                #         c[si][0][2] = 0
+                #         c[si][1][2] = 1
+                #     else:
+                #         l = 4
+                #         c[si][0][2] = 0
+                #         c[si][1][2] = 0
         else:
             # Extra Credit
             if E == 1:
