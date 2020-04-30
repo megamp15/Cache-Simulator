@@ -64,7 +64,7 @@ def cache_read(address, s, t, b, S, E, B, replace, RAM):
     # If associativity is 1, tag is not needed if the cache size and block size are large.
     # Ex) 256 byte Cache size with 8 byte block size or 3 bits that produces 32 sets or 5 bits so t=8-(5+3)=0
     if tag != "":
-        print(f"tag:{ (hex(int(tag, 2)))[2:]}")
+        print(f"tag:{(hex(int(tag, 2)))[2:].upper()}")
     else:
         print("tag:")
 
@@ -72,7 +72,7 @@ def cache_read(address, s, t, b, S, E, B, replace, RAM):
     # If there is a hit then we update hit variable to true, assign e to a variable and break out of the loop
     for e in range(E):
         if tag != "":
-            if ((str(c[si][e][0]) == "1") and (str(c[si][e][3]) == str(hex(int(tag, 2)))[2:].zfill(2))):
+            if ((str(c[si][e][0]) == "1") and (str(c[si][e][3]).upper() == (str(hex(int(tag, 2)))[2:].zfill(2)).upper())):
                 d_e = e
                 hit = True
                 break
