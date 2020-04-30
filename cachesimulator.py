@@ -78,7 +78,7 @@ def simulate_cache():
         elif "cache-write" in command:
             temp = command[command.find(" ")+1:]
             menu.cache_write(temp[: temp.find(" ")].strip(),
-                             temp[temp.find(" ")+1:].strip())
+                             temp[temp.find(" ")+1:].strip(), s, t, b, S, E, B, replace, RAM, write_hit, write_miss)
         elif "cache-flush" in command:
             menu.cache_flush(B, E, S)
         elif "cache-view" in command:
