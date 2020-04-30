@@ -15,7 +15,7 @@ import math
 import menu  # import of menu.py file
 
 # Global variables
-RAM = {}  # Dictionary structure of RAM
+RAM = {}  # Dictionary structure for RAM
 m = 8
 count = 0
 
@@ -50,6 +50,7 @@ def config_cache():
     s = math.log2(S)
     b = math.log2(B)
     t = m-(s+b)
+    # Initializing the cache using the menu.cache function
     menu.cache(B, E, S)
 
 
