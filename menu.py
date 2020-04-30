@@ -51,7 +51,7 @@ def cache_read(address, s, t, b, S, E, B, replace, RAM):
     tag = b_address[:int(t)]
     set_index = b_address[int(t):int(t)+int(s)]
     b_offset = b_address[int(t)+int(s):]
-
+    print(b_address)
     # Fully Associative Cache: set_index = 0 otherwise convert set_index
     if set_index != "":
         print(f"set:{int(set_index, 2)}")
@@ -202,7 +202,7 @@ def cache_read(address, s, t, b, S, E, B, replace, RAM):
         for b in range(4, B+4):
             # Set the B bytes of data from RAM
             c[si][l-1][b] = RAM["0x" +
-                                hex((int(address[2:], 16)-int(b_offset, 2))+(b-4))[2:].zfill(2)]
+                                (hex((int(address[2:], 16)-int(b_offset, 2))+(b-4))[2:].zfill(2)).upper()]
         print(f"ram_address:{address}")  # Address passed in
         print("data:0x"+RAM[address])  # Data at the address in RAM
 

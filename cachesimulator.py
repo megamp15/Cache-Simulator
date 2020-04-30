@@ -27,7 +27,7 @@ def init_ram(input):
     i = open(input, "r")
     for l in i.read().splitlines():
         # Count is converted to hex which is the key in the RAM dictionary with value being the current line l from input.
-        RAM["0x"+str(hex(count))[2:].zfill(2)] = l
+        RAM["0x"+(str(hex(count))[2:].zfill(2)).upper()] = l
         count += 1
     i.close()
     print("ram successfully initialized!")
