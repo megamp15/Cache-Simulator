@@ -17,6 +17,8 @@ LFU_count_line0 = 0
 LFU_count_line1 = 0
 LFU_count_line2 = 0
 LFU_count_line3 = 0
+d_e = 0
+si = 0
 
 
 def cache(B, E, S):
@@ -40,9 +42,7 @@ def cache(B, E, S):
                     c[i][e].append("00")  # Tag + B amounts of data Bytes
 
 
-def cache_read(address, s, t, b, S, E, B, replace, RAM):
-    # Updating global variables
-    global cache_hits, cache_miss, c, LFU_count_line0, LFU_count_line1, LFU_count_line2, LFU_count_line3
+def cache_hit(address, t, s, E):
     # Variables used in function
     hit = False
     # Converting address parameter into 8 bit binary string
@@ -50,7 +50,6 @@ def cache_read(address, s, t, b, S, E, B, replace, RAM):
     # Separating into different binary bits dependednt on computed parameters t, s, and b from config_cache
     tag = b_address[:int(t)]
     set_index = b_address[int(t):int(t)+int(s)]
-    b_offset = b_address[int(t)+int(s):]
     # Fully Associative Cache: set_index = 0 otherwise convert set_index
     if set_index != "":
         print(f"set:{int(set_index, 2)}")
@@ -80,8 +79,19 @@ def cache_read(address, s, t, b, S, E, B, replace, RAM):
                 d_e = e
                 hit = True
                 break
+    return hit
+
+
+def cache_read(address, s, t, b, S, E, B, replace, RAM):
+    # Updating global variables
+    global cache_hits, cache_miss, c, LFU_count_line0, LFU_count_line1, LFU_count_line2, LFU_count_line3, d_e, si
+    # Assigning Important Variables
+    b_address = (bin(int(address[2:], 16))[2:].zfill(8))
+    b_offset = b_address[int(t)+int(s):]
+    tag = b_address[:int(t)]
+
     # Cache Hit
-    if(hit):
+    if cache_hit(address, t, s, E):
         cache_hits += 1  # Increase global variable for hit
         print("hit:yes")
         print("eviction_line:-1")
@@ -207,49 +217,15 @@ def cache_read(address, s, t, b, S, E, B, replace, RAM):
 
 
 def cache_write(address, data, s, t, b, S, E, B, replace, RAM, write_hit, write_miss):
-    # print("ADDRESS:", address)
-    # print("DATA", data)
-    # Updating global variables
+    # Similar to Cache Read
     global cache_hits, cache_miss, c, LFU_count_line0, LFU_count_line1, LFU_count_line2, LFU_count_line3
-    # Variables used in function
-    hit = False
-    # Converting address parameter into 8 bit binary string
+    # Assigning Important Variables
     b_address = (bin(int(address[2:], 16))[2:].zfill(8))
-    # Separating into different binary bits dependednt on computed parameters t, s, and b from config_cache
+    b_offset = b_address[int(t) + int(s):]
     tag = b_address[:int(t)]
-    set_index = b_address[int(t):int(t)+int(s)]
-    b_offset = b_address[int(t)+int(s):]
-    # Fully Associative Cache: set_index = 0 otherwise convert set_index
-    if set_index != "":
-        print(f"set:{int(set_index, 2)}")
-        # Converting set_index from binary string to decimal integer for access to cache list data structure
-        si = int(set_index, 2)
-    else:
-        print(f"set:0")
-        si = 0
 
-    # If associativity is 1, tag is not needed if the cache size and block size are large.
-    # Ex) 256 byte Cache size with 8 byte block size or 3 bits that produces 32 sets or 5 bits so t=8-(5+3)=0
-    if tag != "":
-        print(f"tag:{(hex(int(tag, 2)))[2:].upper()}")
-    else:
-        print("tag:")
-
-    # Check lines in a certain set if valid bit is 1 and tags from address and cache match if there is a tag from address.
-    # If there is a hit then we update hit variable to true, assign e to a variable and break out of the loop
-    for e in range(E):
-        if tag != "":
-            if ((str(c[si][e][0]) == "1") and (str(c[si][e][3]).upper() == (str(hex(int(tag, 2)))[2:].zfill(2)).upper())):
-                d_e = e
-                hit = True
-                break
-        else:
-            if ((str(c[si][e][0])) == "1"):
-                d_e = e
-                hit = True
-                break
     # Write Hit
-    if(hit):
+    if cache_hit(address, t, s, E):
         cache_hits += 1  # Increase global variable for hit
         print("write_hit:yes")
         print("eviction_line:-1")
@@ -260,7 +236,7 @@ def cache_write(address, data, s, t, b, S, E, B, replace, RAM, write_hit, write_
         if write_hit == 1:
             RAM[address] = data[2:]
         else:
-            c[si][d_e][1] = 1  # setting dirty bit
+            c[si][d_e][1] = 1  # Dirty bit
         # LFU global variable updates depending on line hit.
         if replace == 3:
             if d_e == 0:
@@ -295,26 +271,25 @@ def cache_write(address, data, s, t, b, S, E, B, replace, RAM, write_hit, write_
                 l = random.randint(1, E)
         elif replace == 2:  # Least Recently Used
             if E == 1:
-                l = 1  # One line in set so we evict that line
+                l = 1  # evict line
             elif E == 2:
                 # Use "Hidden" extra index in cache list data structure to select the line
-                # The number of the index bit determines which line needs to be evicted. 0 == line 1 and 1 == line 2 in associativity of 2
+                # The number of the index bit determines which line needs to be evicted
                 if c[si][0][2] == 0:
-                    l = 1  # line to be evicted
+                    l = 1  # evicted line
                     # Update the bit to the opposite line
                     c[si][0][2] = 1
                 else:
-                    l = 2  # line to be evicted
+                    l = 2  # evicted line
                     # Update the bit to the opposite line
                     c[si][0][2] = 0
             else:
-                # The least frequently used for associativity of 4 works in a circle where we evict the first line, then second, third, fourth, and then back to the first line
                 if c[si][0][2] == 0:
-                    # Checks if the index is equal to 0 to denote least recently used
+                    # Checks if the index is equal to 0
                     l = 1
-                    # Set index to 1 since it is not the least recently used anymore
+                    # Set index to 1
                     c[si][0][2] = 1
-                    # Set next index to 0 since that is next in line to be evicted
+                    # Set next index to 0
                     c[si][1][2] = 0
                 # Repeats for all lines
                 elif c[si][1][2] == 0:
@@ -333,9 +308,8 @@ def cache_write(address, data, s, t, b, S, E, B, replace, RAM, write_hit, write_
         else:
             # Extra Credit - Least Frequently Used
             if E == 1:
-                l = 1  # One line in set so we evict that line
+                l = 1  # Evict line
             elif E == 2:
-                # Between the two line which LFU hidden index has the minimum frequency. Frequency is set to 1 if its miss since it is only in the cache at that moment. Increases with cache read or write.
                 if c[si][0][2] == min(c[si][0][2], c[si][1][2]):
                     l = 1
                     LFU_count_line0 = 1
@@ -370,10 +344,11 @@ def cache_write(address, data, s, t, b, S, E, B, replace, RAM, write_hit, write_
 
         if write_miss == 1:
             print(f"eviction_line:{l}")
-            # Access the line in the set and make the valid bit to 1
+            # Access the line in the set
+            # Make the valid bit to 1
             c[si][l-1][0] = "1"
             if tag != "":
-                # Set tag in cache list if there is a tag as stated before.
+                # Set tag in cache list
                 c[si][l-1][3] = str(hex(int(tag, 2)))[2:].zfill(2).upper()
             for b in range(4, B+4):
                 # Set the B bytes of data from RAM

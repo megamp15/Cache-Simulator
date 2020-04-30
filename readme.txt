@@ -7,8 +7,8 @@ After intialization of RAM from the input file, user will be prompted to configu
 Ranges for input:
     Cache size: 8 bytes to 256 bytes
     Associativity: 1, 2, or 4 (way set associative cache)
-    Replacement Policy: 
-        1 == Random Replacement
+    Replacement Policy: -> evicts non-valid lines before valid lines
+        1 == Random Replacement -> the non-valid lines are chosen at random instead of linearly until all lines are valid. Once all lines are valid then any line can be chosen to be evicted.
         2 == Least Recently Used
         3 == Least Frequently Used
     Write Hit Policy: 
