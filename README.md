@@ -1,19 +1,25 @@
 # Cache-Simulator
-Computer Organization Project: Simulating a Cache using a high-level language. 
+### Computer Organization Project: Simulating a Cache using a high-level language. 
 
 
-Instructions:
+### Instructions:
+
 Run the program by entering python3 runner, cachesimulator.py, and input file.
-EX) python cachesimulator.py input.txt 
 
+```console 
+python cachesimulator.py input.txt
+```
 The main function shall proceed to call the other functions.
 
 After intialization of RAM from the input file, user will be prompted to configure the cache.
+
 Ranges for input:
+
     Cache size: 8 bytes to 256 bytes
     Associativity: 1, 2, or 4 (way set associative cache)
     Replacement Policy: -> evicts non-valid lines before valid lines
-        1 == Random Replacement -> the non-valid lines are chosen at random instead of linearly until all lines are valid. Once all lines are valid then any line can be chosen to be evicted.
+        1 == Random Replacement -> the non-valid lines are chosen at random instead of linearly until all lines are valid. 
+                                   Once all lines are valid then any line can be chosen to be evicted.
         2 == Least Recently Used
         3 == Least Frequently Used
     Write Hit Policy: 
@@ -24,7 +30,8 @@ Ranges for input:
         2 == No Write-allocate   -> write the block in RAM and do not load it in the cache
 
 After successfully configuring the cache, the user will be prompted with a MENU of commands that repeats until the quit command is entered:
-    *** Cache simulator menu ***
+    
+    '''*** Cache simulator menu ***
     type one command:
     1. cache-read
     2. cache-write
@@ -34,7 +41,7 @@ After successfully configuring the cache, the user will be prompted with a MENU 
     6. cache-dump
     7. memory-dump
     8. quit
-    ****************************
+    ****************************'''
     Please type the name of the command only such as cache-flush and any arguments that may be required as outlined below:
     Argumemt commands:
         1. cache-read  -> takes a single argument for the address of the data to be read from cache or RAM if it is a miss. Ex) cache-read 0x00
