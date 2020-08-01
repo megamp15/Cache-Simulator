@@ -31,7 +31,7 @@ Ranges for input:
 
 After successfully configuring the cache, the user will be prompted with a MENU of commands that repeats until the quit command is entered:
     
-    '''*** Cache simulator menu ***
+    *** Cache simulator menu ***
     type one command:
     1. cache-read
     2. cache-write
@@ -41,7 +41,7 @@ After successfully configuring the cache, the user will be prompted with a MENU 
     6. cache-dump
     7. memory-dump
     8. quit
-    ****************************'''
+    ****************************
     Please type the name of the command only such as cache-flush and any arguments that may be required as outlined below:
     Argumemt commands:
         1. cache-read  -> takes a single argument for the address of the data to be read from cache or RAM if it is a miss. Ex) cache-read 0x00
